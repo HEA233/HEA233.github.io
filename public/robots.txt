@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://hea233.github.io/sitemap-index.xml
