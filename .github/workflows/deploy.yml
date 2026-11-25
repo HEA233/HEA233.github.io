@@ -5,6 +5,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  actions: read
   pages: write
   id-token: write
 concurrency:
@@ -16,12 +17,34 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      PAGES_ARTIFACT_NAME: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: public
+          name: ${{ env.PAGES_ARTIFACT_NAME }}
+      - name: Verify uploaded artifact is visible
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          for attempt in {1..12}; do
+            if count=$(gh api --method GET "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts" -f name="$PAGES_ARTIFACT_NAME" --jq '[.artifacts[] | select(.expired == false)] | length'); then
+              if [ "$count" = "1" ]; then
+                echo "Artifact is available: $PAGES_ARTIFACT_NAME"
+                exit 0
+              fi
+              echo "Artifact count: $count"
+            fi
+            sleep 5
+          done
+          echo "::error::Expected exactly one available Pages artifact: $PAGES_ARTIFACT_NAME"
+          exit 1
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: ${{ env.PAGES_ARTIFACT_NAME }}
