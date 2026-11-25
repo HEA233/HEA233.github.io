@@ -1,0 +1,483 @@
+[
+  {
+    "id": "P0-01",
+    "slug": "mathematics",
+    "title": "Mathematics & Statistics",
+    "topics": [
+      {
+        "title": "Linear Algebra",
+        "subtopics": [
+          "Vectors",
+          "Matrices",
+          "Eigenvalues",
+          "SVD"
+        ]
+      },
+      {
+        "title": "Calculus",
+        "subtopics": [
+          "Derivatives",
+          "Chain Rule",
+          "Jacobian"
+        ]
+      },
+      {
+        "title": "Probability",
+        "subtopics": [
+          "Distributions",
+          "Expectation",
+          "Variance",
+          "Markov Processes"
+        ]
+      },
+      {
+        "title": "Statistics",
+        "subtopics": [
+          "Standard Error",
+          "Confidence Interval",
+          "p-value"
+        ]
+      },
+      {
+        "title": "Optimisation & Information Theory",
+        "subtopics": [
+          "Gradient Descent",
+          "Entropy",
+          "KL Divergence"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "P0-02",
+    "slug": "computer-science",
+    "title": "Computer Science & Engineering",
+    "topics": [
+      {
+        "title": "Data Structures",
+        "subtopics": [
+          "Arrays",
+          "Trees",
+          "Graphs",
+          "Hash Tables"
+        ]
+      },
+      {
+        "title": "Algorithms",
+        "subtopics": [
+          "Sorting",
+          "Searching",
+          "Dynamic Programming"
+        ]
+      },
+      {
+        "title": "Software Engineering",
+        "subtopics": [
+          "Python",
+          "Testing",
+          "Design Patterns"
+        ]
+      },
+      {
+        "title": "Computer Systems",
+        "subtopics": [
+          "Memory",
+          "Concurrency",
+          "Networking"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "P0-03",
+    "slug": "machine-learning",
+    "title": "Machine Learning & Deep Learning",
+    "topics": [
+      {
+        "title": "Classical ML",
+        "subtopics": [
+          "Regression",
+          "SVM",
+          "Decision Trees",
+          "Ensembles",
+          "Clustering"
+        ]
+      },
+      {
+        "title": "Neural Networks",
+        "subtopics": [
+          "MLP",
+          "Forward Propagation",
+          "Backpropagation",
+          "Loss Functions"
+        ]
+      },
+      {
+        "title": "Activation Functions",
+        "subtopics": [
+          "ReLU",
+          "GELU",
+          "SiLU",
+          "Sigmoid"
+        ]
+      },
+      {
+        "title": "Optimisation",
+        "subtopics": [
+          "SGD",
+          "Adam",
+          "AdamW"
+        ]
+      },
+      {
+        "title": "Generalisation",
+        "subtopics": [
+          "Regularisation",
+          "Bias-Variance",
+          "Dropout",
+          "Normalisation"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "P0-04",
+    "slug": "information-retrieval",
+    "title": "Information Retrieval",
+    "topics": [
+      {
+        "title": "Lexical Retrieval",
+        "subtopics": [
+          "Boolean Search",
+          "Inverted Index",
+          "TF-IDF",
+          "BM25"
+        ]
+      },
+      {
+        "title": "Dense Retrieval",
+        "subtopics": [
+          "Embeddings",
+          "Bi-encoder",
+          "Contrastive Learning"
+        ]
+      },
+      {
+        "title": "Vector Search",
+        "subtopics": [
+          "Cosine Similarity",
+          "ANN",
+          "HNSW"
+        ]
+      },
+      {
+        "title": "Reranking",
+        "subtopics": [
+          "Cross-encoder",
+          "Late Interaction",
+          "Ranking Losses",
+          "Hard Negatives"
+        ],
+        "articles": [
+          "/blog/reranker/"
+        ]
+      },
+      {
+        "title": "Hybrid Retrieval",
+        "subtopics": [
+          "RRF",
+          "Score Fusion",
+          "Multi-stage Retrieval"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "P0-05",
+    "slug": "foundation-models",
+    "title": "Transformer & Foundation Models",
+    "topics": [
+      {
+        "title": "Tokenisation",
+        "subtopics": [
+          "BPE",
+          "SentencePiece"
+        ]
+      },
+      {
+        "title": "Attention",
+        "subtopics": [
+          "Self-Attention",
+          "MHA",
+          "GQA"
+        ]
+      },
+      {
+        "title": "Model Architecture",
+        "subtopics": [
+          "RoPE",
+          "MoE",
+          "Normalisation"
+        ]
+      },
+      {
+        "title": "Generative Models",
+        "subtopics": [
+          "Diffusion",
+          "VAE",
+          "Autoregressive Models"
+        ]
+      },
+      {
+        "title": "Multimodal Models",
+        "subtopics": [
+          "CLIP",
+          "VLM",
+          "VLA"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "P0-06",
+    "slug": "llm-training",
+    "title": "LLM Training & Alignment",
+    "topics": [
+      {
+        "title": "Pretraining",
+        "subtopics": [
+          "Language Modelling",
+          "Scaling Laws"
+        ]
+      },
+      {
+        "title": "Post-training",
+        "subtopics": [
+          "SFT",
+          "LoRA",
+          "Fine-tuning"
+        ]
+      },
+      {
+        "title": "Preference Learning",
+        "subtopics": [
+          "DPO",
+          "RLHF",
+          "RLAIF"
+        ]
+      },
+      {
+        "title": "Decoding",
+        "subtopics": [
+          "Temperature",
+          "Top-k",
+          "Top-p"
+        ]
+      },
+      {
+        "title": "Training Data",
+        "subtopics": [
+          "Data Quality",
+          "Deduplication",
+          "Curriculum"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "P0-07",
+    "slug": "reinforcement-learning",
+    "title": "Reinforcement Learning",
+    "topics": [
+      {
+        "title": "RL Foundations",
+        "subtopics": [
+          "MDP",
+          "Bellman Equation",
+          "Reward"
+        ]
+      },
+      {
+        "title": "Value-based Methods",
+        "subtopics": [
+          "Q-Learning",
+          "DQN",
+          "TD Learning"
+        ]
+      },
+      {
+        "title": "Policy-based Methods",
+        "subtopics": [
+          "Policy Gradient",
+          "REINFORCE"
+        ]
+      },
+      {
+        "title": "Actor-Critic Methods",
+        "subtopics": [
+          "Advantage",
+          "GAE",
+          "PPO"
+        ]
+      },
+      {
+        "title": "Modern RL",
+        "subtopics": [
+          "GRPO",
+          "RLVR",
+          "Agent RL"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "P0-08",
+    "slug": "evaluation",
+    "title": "Evaluation & Research Methods",
+    "topics": [
+      {
+        "title": "Retrieval Evaluation",
+        "subtopics": [
+          "Precision",
+          "Recall",
+          "MRR",
+          "nDCG"
+        ]
+      },
+      {
+        "title": "Generation Evaluation",
+        "subtopics": [
+          "BLEU",
+          "ROUGE",
+          "BERTScore",
+          "Perplexity"
+        ]
+      },
+      {
+        "title": "LLM Evaluation",
+        "subtopics": [
+          "LLM-as-a-Judge",
+          "Benchmarks",
+          "Calibration"
+        ]
+      },
+      {
+        "title": "Experimental Design",
+        "subtopics": [
+          "Hypothesis Testing",
+          "A/B Testing",
+          "Ablation"
+        ]
+      },
+      {
+        "title": "Research Methodology",
+        "subtopics": [
+          "Reproducibility",
+          "Baselines",
+          "Scientific Writing"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "P0-09",
+    "slug": "ml-systems",
+    "title": "AI Infrastructure & ML Systems",
+    "topics": [
+      {
+        "title": "Hardware",
+        "subtopics": [
+          "GPU",
+          "TPU",
+          "CUDA",
+          "Triton"
+        ]
+      },
+      {
+        "title": "Distributed Training",
+        "subtopics": [
+          "DDP",
+          "FSDP",
+          "ZeRO",
+          "TP",
+          "PP"
+        ]
+      },
+      {
+        "title": "Inference Optimisation",
+        "subtopics": [
+          "KV Cache",
+          "FlashAttention",
+          "Quantisation"
+        ]
+      },
+      {
+        "title": "Production Systems",
+        "subtopics": [
+          "Serving",
+          "Kubernetes",
+          "Monitoring"
+        ]
+      },
+      {
+        "title": "ML System Design",
+        "subtopics": [
+          "Scalability",
+          "Reliability",
+          "Cost"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "P0-10",
+    "slug": "frontier-research",
+    "title": "Frontier AI Research",
+    "topics": [
+      {
+        "title": "Reasoning & Test-time Compute",
+        "subtopics": [
+          "Verifiers",
+          "Search",
+          "Process Rewards"
+        ]
+      },
+      {
+        "title": "Agentic Intelligence",
+        "subtopics": [
+          "Planning",
+          "Tool Use",
+          "Agent Learning"
+        ]
+      },
+      {
+        "title": "World Models",
+        "subtopics": [
+          "Simulation",
+          "Model-based RL"
+        ]
+      },
+      {
+        "title": "AI for Science",
+        "subtopics": [
+          "Algorithm Discovery",
+          "Formal Verification"
+        ]
+      },
+      {
+        "title": "Emerging Architectures",
+        "subtopics": [
+          "State Space Models",
+          "Linear Attention"
+        ]
+      },
+      {
+        "title": "AI Safety & Interpretability",
+        "subtopics": [
+          "Reward Hacking",
+          "Mechanistic Interpretability"
+        ]
+      }
+    ]
+  }
+]
