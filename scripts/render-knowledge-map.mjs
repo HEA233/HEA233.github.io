@@ -34,9 +34,9 @@ function renderMap(modules){
 <meta property="og:url" content="${baseUrl}${path}">
 <meta property="og:type" content="website">
 <link rel="stylesheet" href="/_astro/Layout.BcIYCpiY.css">
-<link rel="stylesheet" href="/knowledge.css">
+<link rel="stylesheet" href="${isHome?'/knowledge-home.css':'/knowledge.css'}">
 </head>
-<body class="knowledge-site">
+<body class="${isHome?'knowledge-landing':'knowledge-site'}">
 <a class="skip" href="#main">Skip to content</a>
 <div class="shell">
 <header class="site-header knowledge-header">
@@ -49,14 +49,19 @@ function renderMap(modules){
 </body>
 </html>
 `;
-  const cards=modules.map((m,i)=>`<a class="module-card" href="/knowledge/${esc(m.slug)}/">
-<div class="card-top"><span class="module-code">${esc(m.id)}</span><span class="card-mark">${mark(i)}</span></div>
+  const artOrder=["mathematics","computer-science","machine-learning","information-retrieval","foundation-models","llm-training","reinforcement-learning","evaluation","ml-systems","frontier-research"];
+  const cards=modules.map(m=>{
+    const n=artOrder.indexOf(m.slug);
+    const art=n<0?"":`<div class="module-art" style="--art-x:${n%2*100}%;--art-y:${Math.floor(n/2)*25}%" aria-hidden="true"></div>`;
+    return `<a class="module-card" href="/knowledge/${esc(m.slug)}/">
+${art}
+<span class="module-code">${esc(m.id)}</span>
 <h2>${esc(m.title)}</h2>
 <p class="module-topics">${m.topics.map(t=>`<span>${esc(t.title)}</span>`).join('<span class="topic-separator" aria-hidden="true"> · </span>')}</p>
-<div class="card-bottom"><span class="card-arrow">${arrow}</span></div>
-</a>`).join("\n");
+</a>`;
+  }).join("\n");
   const home=`<div class="knowledge-home">
-<header class="map-heading"><div class="map-heading-inner"><h1>Knowledge map<span>.</span></h1></div></header>
+<header class="map-heading"><h1>Knowledge Map</h1></header>
 <section class="module-grid" aria-label="Learning modules">${cards}</section>
 </div>`;
   const files=[{path:"public/index.html",content:template("ML Engineering Notebook · Knowledge Map","/",home,true)}];
