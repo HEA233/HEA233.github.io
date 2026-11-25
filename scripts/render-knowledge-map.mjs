@@ -41,7 +41,7 @@ function renderMap(modules){
 <div class="shell">
 <header class="site-header knowledge-header">
 <a class="brand" href="/" aria-label="HEA233 home"><strong>HEA233</strong><span class="brand-divider" aria-hidden="true">/</span><span>ML Engineering Notebook</span></a>
-<nav aria-label="Main navigation"><a href="/"${isHome?' aria-current="page"':''}>Knowledge Map</a></nav>
+<nav aria-label="Main navigation"><a href="/"${isHome?' aria-current="page"':''}>Knowledge Map</a><a href="/about/">About</a></nav>
 </header>
 <main id="main">${body}</main>
 <footer><span>© HEA233</span><a href="https://github.com/HEA233">GitHub</a></footer>
@@ -56,7 +56,7 @@ function renderMap(modules){
 <div class="card-bottom"><span class="card-arrow">${arrow}</span></div>
 </a>`).join("\n");
   const home=`<div class="knowledge-home">
-<header class="map-heading"><h1>Knowledge Map</h1></header>
+<header class="map-heading"><div class="map-heading-inner"><h1>Knowledge map<span>.</span></h1></div></header>
 <section class="module-grid" aria-label="Learning modules">${cards}</section>
 </div>`;
   const files=[{path:"public/index.html",content:template("ML Engineering Notebook · Knowledge Map","/",home,true)}];
