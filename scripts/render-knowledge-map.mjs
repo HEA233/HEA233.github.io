@@ -41,7 +41,7 @@ function renderMap(modules){
 <div class="shell">
 <header class="site-header knowledge-header">
 <a class="brand" href="/" aria-label="HEA233 home"><strong>HEA233</strong><span class="brand-divider" aria-hidden="true">/</span><span>ML Engineering Notebook</span></a>
-<nav aria-label="Main navigation"><a href="/"${isHome?' aria-current="page"':''}>Knowledge Map</a><a href="/about/">About</a></nav>
+<nav aria-label="Main navigation"><a href="/"${isHome?' aria-current="page"':''}>Knowledge Map</a></nav>
 </header>
 <main id="main">${body}</main>
 <footer><span>© HEA233</span><a href="https://github.com/HEA233">GitHub</a></footer>
@@ -49,15 +49,14 @@ function renderMap(modules){
 </body>
 </html>
 `;
-  const n=modules.length;
   const cards=modules.map((m,i)=>`<a class="module-card" href="/knowledge/${esc(m.slug)}/">
 <div class="card-top"><span class="module-code">${esc(m.id)}</span><span class="card-mark">${mark(i)}</span></div>
 <h2>${esc(m.title)}</h2>
 <p class="module-topics">${m.topics.map(t=>`<span>${esc(t.title)}</span>`).join('<span class="topic-separator" aria-hidden="true"> · </span>')}</p>
-<div class="card-bottom"><span>${m.topics.length} topics</span><span class="card-arrow">${arrow}</span></div>
+<div class="card-bottom"><span class="card-arrow">${arrow}</span></div>
 </a>`).join("\n");
   const home=`<div class="knowledge-home">
-<header class="map-heading"><div class="map-heading-inner"><p class="eyebrow">ML Engineering Notebook</p><h1>Knowledge map<span>.</span></h1></div><div class="map-caption"><span class="map-count">${String(n).padStart(2,"0")}</span><span>Learning modules</span></div></header>
+<header class="map-heading"><h1>Knowledge Map</h1></header>
 <section class="module-grid" aria-label="Learning modules">${cards}</section>
 </div>`;
   const files=[{path:"public/index.html",content:template("ML Engineering Notebook · Knowledge Map","/",home,true)}];
@@ -66,17 +65,17 @@ function renderMap(modules){
       const articles=t.articles||[];
       const articleLinks=articles.map(a=>{
         const title=a==="/blog/reranker/"?"Reranker：从候选召回到排序损失":a;
-        return `<li class="published-note"><a href="${esc(a)}"><span class="note-icon"><svg width="19" height="19" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2.5h6l4 4V17.5H5zM11 2.5v4h4M7.5 10h5m-5 3h5"/></svg></span><span><span class="note-label">Published note</span><span class="note-title" lang="zh-CN">${esc(title)}</span></span><span class="note-arrow">${arrow}</span></a></li>`;
+        return `<li class="published-note"><a href="${esc(a)}"><span class="note-icon"><svg width="19" height="19" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2.5h6l4 4V17.5H5zM11 2.5v4h4M7.5 10h5m-5 3h5"/></svg></span><span><span class="note-title" lang="zh-CN">${esc(title)}</span></span><span class="note-arrow">${arrow}</span></a></li>`;
       }).join("");
       return `<details class="topic-row"${articles.length?" open":""}>
-<summary><span class="topic-number">${String(j+1).padStart(2,"0")}</span><span class="topic-name">${esc(t.title)}</span><span class="topic-count">${t.subtopics.length} topics</span><span class="topic-arrow">${caret}</span></summary>
+<summary><span class="topic-number">${String(j+1).padStart(2,"0")}</span><span class="topic-name">${esc(t.title)}</span><span class="topic-arrow">${caret}</span></summary>
 <ul class="topic-list">${t.subtopics.map(s=>`<li class="subtopic"><span class="subtopic-dot" aria-hidden="true"></span>${esc(s)}</li>`).join("")}${articleLinks}</ul>
 </details>`;
     }).join("\n");
     const body=`<div class="module-page">
 <nav class="module-breadcrumb" aria-label="Breadcrumb"><a href="/"><span aria-hidden="true">←</span> All modules</a><span class="crumb-divider" aria-hidden="true">/</span><span>${esc(m.id)}</span></nav>
-<header class="module-heading"><div><p class="eyebrow">${esc(m.id)} · Module</p><h1>${esc(m.title)}</h1><p class="module-subtitle">${m.topics.length} P1 topics</p></div><div class="heading-mark">${mark(i)}</div></header>
-<section class="topic-section" aria-label="Knowledge index"><div class="topic-heading"><h2>Contents</h2><span>P1 / P2</span></div><div class="topic-index">${rows}</div></section>
+<header class="module-heading"><div><h1>${esc(m.title)}</h1></div><div class="heading-mark">${mark(i)}</div></header>
+<section class="topic-section" aria-label="Knowledge index"><div class="topic-index">${rows}</div></section>
 </div>`;
     files.push({path:`public/knowledge/${m.slug}/index.html`,content:template(`${m.title} · ML Engineering Notebook`,`/knowledge/${m.slug}/`,body,false)});
   }
