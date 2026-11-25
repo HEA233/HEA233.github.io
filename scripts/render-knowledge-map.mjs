@@ -1,93 +1,38 @@
-// Regenerate the static knowledge map after editing knowledge-map.json.
-// Run: node scripts/render-knowledge-map.mjs
-import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
+// Regenerate the public Knowledge Map after editing knowledge-map.json.
+// Run from the repository root: node scripts/render-knowledge-map.mjs
+import { readFileSync, mkdirSync, writeFileSync, existsSync } from 'node:fs';
 import { dirname } from 'node:path';
-function renderMap(modules){
-  const esc=s=>String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;");
-  const drawings=[
-    '<path d="M5 19h28M10 24V4M12 19c4-1 6-12 11-12s5 9 10 10"/><circle cx="23" cy="7" r="1.6" fill="currentColor" stroke="none"/>',
-    '<path d="m13 7-8 10 8 10m12-20 8 10-8 10M21 5l-4 24"/>',
-    '<path d="M9 9l11 8m-11 10 11-10m0 0 11-10m-11 10 11 10"/><circle cx="9" cy="9" r="3"/><circle cx="9" cy="27" r="3"/><circle cx="20" cy="17" r="3"/><circle cx="31" cy="7" r="3"/><circle cx="31" cy="27" r="3"/>',
-    '<circle cx="15" cy="15" r="9"/><path d="m22 22 9 9M11 15h8m-4-4v8"/>',
-    '<rect x="5" y="6" width="8" height="8" rx="1.5"/><rect x="24" y="6" width="8" height="8" rx="1.5"/><rect x="5" y="25" width="8" height="8" rx="1.5"/><rect x="24" y="25" width="8" height="8" rx="1.5"/><path d="M13 10h11M9 14v11m19-11v11M13 29h11M13 14l11 11"/>',
-    '<path d="M6 29h28M9 24l8-8 5 4 10-13m-7 0h7v7"/><circle cx="17" cy="16" r="1.5" fill="currentColor" stroke="none"/>',
-    '<path d="M30 12a12 12 0 1 0 1 13m-1-13V5m0 7h-7"/><path d="m16 18 3 3 6-7"/>',
-    '<path d="M7 7v24h26M12 25v-7m7 7V12m7 13V7"/><path d="M10 10l5 2 5-5 6 2"/>',
-    '<rect x="8" y="8" width="22" height="22" rx="3"/><rect x="14" y="14" width="10" height="10" rx="1"/><path d="M13 3v5m6-5v5m6-5v5M13 30v5m6-5v5m6-5v5M3 13h5m-5 6h5m-5 6h5m22-12h5m-5 6h5m-5 6h5"/>',
-    '<path d="M19 4c0 10-5 15-15 15 10 0 15 5 15 15 0-10 5-15 15-15-10 0-15-5-15-15Z"/><path d="M29 4v6m-3-3h6M7 27v6m-3-3h6"/>'
-  ];
-  const mark=i=>`<svg class="module-mark" width="40" height="40" viewBox="0 0 38 38" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${drawings[i]}</svg>`;
-  const arrow='<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h11m-4-4 4 4-4 4"/></svg>';
-  const caret='<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 8 4 4 4-4"/></svg>';
-  const baseUrl="https://hea233.github.io";
-  const template=(title,path,body,isHome)=>`<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${esc(title)}</title>
-<meta name="description" content="A personal AI and machine learning knowledge map.">
-<meta name="author" content="HEA233">
-<link rel="canonical" href="${baseUrl}${path}">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<meta property="og:title" content="${esc(title)}">
-<meta property="og:url" content="${baseUrl}${path}">
-<meta property="og:type" content="website">
-<link rel="stylesheet" href="/_astro/Layout.BcIYCpiY.css">
-<link rel="stylesheet" href="${isHome?'/knowledge-home.css':'/knowledge.css'}">
-</head>
-<body class="${isHome?'knowledge-landing':'knowledge-site'}">
-<a class="skip" href="#main">Skip to content</a>
-<div class="shell">
-<header class="site-header knowledge-header">
-<a class="brand" href="/" aria-label="HEA233 home"><strong>HEA233</strong><span class="brand-divider" aria-hidden="true">/</span><span>ML Engineering Notebook</span></a>
-<nav aria-label="Main navigation"><a href="/"${isHome?' aria-current="page"':''}>Knowledge Map</a><a href="/about/">About</a></nav>
-</header>
-<main id="main">${body}</main>
-<footer><span>© HEA233</span><a href="https://github.com/HEA233">GitHub</a></footer>
-</div>
-</body>
-</html>
-`;
-  const artOrder=["mathematics","computer-science","machine-learning","information-retrieval","foundation-models","llm-training","reinforcement-learning","evaluation","ml-systems","frontier-research"];
-  const cards=modules.map(m=>{
-    const n=artOrder.indexOf(m.slug);
-    const art=n<0?"":`<div class="module-art" style="--art-x:${n%2*100}%;--art-y:${Math.floor(n/2)*25}%" aria-hidden="true"></div>`;
-    return `<a class="module-card" href="/knowledge/${esc(m.slug)}/">
-${art}
-<span class="module-code">${esc(m.id)}</span>
-<h2>${esc(m.title)}</h2>
-<p class="module-topics">${m.topics.map(t=>`<span>${esc(t.title)}</span>`).join('<span class="topic-separator" aria-hidden="true"> · </span>')}</p>
-</a>`;
-  }).join("\n");
-  const home=`<div class="knowledge-home">
-<header class="map-heading"><h1>Knowledge Map</h1></header>
-<section class="module-grid" aria-label="Learning modules">${cards}</section>
-</div>`;
-  const files=[{path:"public/index.html",content:template("ML Engineering Notebook · Knowledge Map","/",home,true)}];
-  for(const [i,m] of modules.entries()){
-    const rows=m.topics.map((t,j)=>{
-      const articles=t.articles||[];
-      const articleLinks=articles.map(a=>{
-        const title=a==="/blog/reranker/"?"Reranker：从候选召回到排序损失":a;
-        return `<li class="published-note"><a href="${esc(a)}"><span class="note-icon"><svg width="19" height="19" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2.5h6l4 4V17.5H5zM11 2.5v4h4M7.5 10h5m-5 3h5"/></svg></span><span><span class="note-title" lang="zh-CN">${esc(title)}</span></span><span class="note-arrow">${arrow}</span></a></li>`;
-      }).join("");
-      return `<details class="topic-row"${articles.length?" open":""}>
-<summary><span class="topic-number">${String(j+1).padStart(2,"0")}</span><span class="topic-name">${esc(t.title)}</span><span class="topic-arrow">${caret}</span></summary>
-<ul class="topic-list">${t.subtopics.map(s=>`<li class="subtopic"><span class="subtopic-dot" aria-hidden="true"></span>${esc(s)}</li>`).join("")}${articleLinks}</ul>
-</details>`;
-    }).join("\n");
-    const body=`<div class="module-page">
-<nav class="module-breadcrumb" aria-label="Breadcrumb"><a href="/"><span aria-hidden="true">←</span> All modules</a><span class="crumb-divider" aria-hidden="true">/</span><span>${esc(m.id)}</span></nav>
-<header class="module-heading"><div><h1>${esc(m.title)}</h1></div><div class="heading-mark">${mark(i)}</div></header>
-<section class="topic-section" aria-label="Knowledge index"><div class="topic-index">${rows}</div></section>
-</div>`;
-    files.push({path:`public/knowledge/${m.slug}/index.html`,content:template(`${m.title} · ML Engineering Notebook`,`/knowledge/${m.slug}/`,body,false)});
-  }
-  return files;
+function renderSite(data,css,sitemap){
+const {modules,sources}=data;
+const esc=s=>String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#39;");
+const url=m=>`/knowledge/${m.slug}/`,count=m=>m.topics.reduce((n,t)=>n+t.subtopics.length,0);
+const idx=new Map();for(const m of modules)for(const t of m.topics)for(const n of t.subtopics)idx.set(n.id,{m,t,n});
+const artOrder=["mathematics","computer-science","machine-learning","information-retrieval","foundation-models","llm-training","reinforcement-learning","evaluation","ml-systems","frontier-research"];
+const glyphs=['<path d="M5 27h28M9 31V5M12 23c6 0 7-14 13-14s4 8 8 8"/>','<path d="M6 29h26M10 25v-8m9 8V8m9 17V13"/>','<circle cx="19" cy="19" r="12"/><path d="M7 19h24M19 7v24"/>','<path d="M7 7l12 12L7 31m12-12L31 7M19 19l12 12"/><circle cx="19" cy="19" r="3"/>','<rect x="7" y="6" width="24" height="26" rx="3"/><path d="M12 13h14M12 19h14M12 25h9"/>','<path d="m14 8-9 11 9 11m10-22 9 11-9 11M21 5l-4 28"/>','<path d="M30 12a12 12 0 1 0 1 13m-1-13V5m0 7h-7"/><path d="m16 18 3 3 6-7"/>','<rect x="8" y="8" width="22" height="22" rx="3"/><rect x="14" y="14" width="10" height="10"/><path d="M13 3v5m6-5v5m6-5v5M13 30v5m6-5v5m6-5v5M3 13h5m-5 6h5m-5 6h5m22-12h5m-5 6h5m-5 6h5"/>','<path d="M19 4c0 10-5 15-15 15 10 0 15 5 15 15 0-10 5-15 15-15-10 0-15-5-15-15Z"/>'];
+const iconFor={LA:0,ST:1,IT:2,OP:0,CS:5,PR:5,ML:3,PM:2,DL:3,RE:3,RL:6,SP:6,NL:4,IR:4,TR:3,GE:8,LM:1,AG:6,DA:4,SY:7,EV:1,SA:2,RX:8};
+const icon=m=>`<svg class="module-mark" width="40" height="40" viewBox="0 0 38 38" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${glyphs[iconFor[m.id]??0]}</svg>`;
+const caret='<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 8 4 4 4-4"/></svg>';
+const style=`<style>
+.knowledge-home .map-heading{margin-bottom:16px}.map-intro{margin:0 0 28px;color:var(--ink-soft,#6b6258);font-size:14px;line-height:1.7;max-width:720px}.map-section{margin:40px 0 0}.map-section>h2{font-size:19px;font-weight:600;margin:0 0 19px;color:var(--ink,#332f2b);line-height:1.45;letter-spacing:-.015em}.map-section>h2 span{font-size:12px;font-weight:400;color:var(--ink-soft,#6b6258);margin-left:10px}.module-card .module-art-fallback{height:72px;display:grid;place-items:center;color:#496b68;margin:0 auto 14px;width:100%;flex:none}.module-art-fallback .module-mark{width:58px;height:58px}.module-card .module-count{font-size:12px;color:var(--ink-soft,#6b6258);margin-top:auto;padding-top:13px}.map-search{max-width:740px;margin:0 0 30px}.map-search label{display:block;font-size:13px;font-weight:600;margin-bottom:8px}.map-search input{font:inherit;color:var(--ink,#332f2b);width:100%;min-width:0;padding:12px 15px;border:1px solid #b5beb0;border-radius:8px;background:rgba(255,253,248,.72);box-sizing:border-box}.map-search input:focus-visible{outline:2px solid #496b68;outline-offset:3px}.map-search-results{list-style:none;padding:0;margin:12px 0 0}.map-search-results li{margin:0 0 10px}.map-search-results a{display:block;padding:9px 0;color:var(--ink,#332f2b);line-height:1.55}.map-search-results a:hover{text-decoration:underline}.map-result-path{display:block;color:var(--ink-soft,#6b6258);font-size:12px}.map-search-status{font-size:13px;color:var(--ink-soft,#6b6258);margin-top:12px}.map-search[hidden],#map-domains[hidden],#map-search-results[hidden]{display:none!important}
+.module-meta{font-size:13px;line-height:1.7;color:var(--map-muted);margin:12px 0 0}.topic-name{overflow-wrap:anywhere}.topic-category-count{display:block;font:400 12px/1.5 system-ui,sans-serif;color:var(--map-muted);letter-spacing:0;margin-top:4px}.topic-list .knowledge-node{list-style:none;display:block;padding:4px 0}.node-detail{scroll-margin-top:18px}.topic-row .node-detail>summary{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:9px;min-height:0;padding:10px 0;align-items:baseline;color:var(--map-ink);font:400 14px/1.6 system-ui,sans-serif;list-style:none}.node-detail>summary::-webkit-details-marker{display:none}.node-id{font-size:11px;color:var(--map-muted);font-variant-numeric:tabular-nums;white-space:nowrap}.node-name{overflow-wrap:anywhere}.node-priority{font-size:11px;color:var(--map-muted);white-space:nowrap}.node-detail[open]>summary .node-name{color:var(--map-accent);font-weight:600}.node-detail>summary:hover .node-name{text-decoration:underline;text-underline-offset:3px}.node-body{margin:0 0 14px 53px;font-size:13px;line-height:1.7;color:var(--map-muted);overflow-wrap:anywhere}.node-body h3{font-size:13px;font-weight:600;color:var(--map-ink);margin:15px 0 5px}.node-body p{margin:0 0 7px}.node-body a{text-decoration:underline;text-underline-offset:3px;color:var(--map-accent)}.node-body ul{margin:0;padding-left:17px}.node-body li{padding:2px 0}.node-status{font-size:12px;color:var(--map-muted);font-style:italic}.source-verification{font-size:11px;display:block;color:var(--map-muted)}.node-detail:target>summary{background:#e9eee3;border-radius:5px}
+@media(max-width:620px){.map-section{margin-top:30px}.map-section>h2{font-size:17px}.map-section>h2 span{display:block;margin-left:0}.topic-row .node-detail>summary{grid-template-columns:38px minmax(0,1fr) auto;gap:7px}.node-body{margin-left:0;padding-left:10px}.module-card .module-art-fallback{height:64px}.module-card .module-count{padding-top:10px}}
+</style>`;
+function client(){const input=document.getElementById("map-query"),search=document.getElementById("map-search"),out=document.getElementById("map-search-results"),domains=document.getElementById("map-domains"),status=document.getElementById("map-search-status"),data=document.getElementById("map-search-data");if(input&&search&&out&&domains&&status&&data){const entries=JSON.parse(data.textContent||"[]");search.hidden=false;const update=()=>{const terms=input.value.trim().toLowerCase().split(/\s+/).filter(Boolean);out.replaceChildren();domains.hidden=terms.length>0;out.hidden=!terms.length;if(!terms.length){status.textContent="";return}const matches=entries.filter(e=>terms.every(t=>e.search.includes(t)));status.textContent=matches.length?(matches.length+" matching topics"+(matches.length>35?" · showing first 35":"")):"No matching topics.";for(const e of matches.slice(0,35)){const li=document.createElement("li"),a=document.createElement("a"),line=document.createElement("span"),trail=document.createElement("span");a.href=e.href;line.textContent=e.id+" · "+e.title;trail.className="map-result-path";trail.textContent=e.module+" / "+e.category+" · "+e.priority;a.append(line,trail);li.append(a);out.append(li)}};input.addEventListener("input",update);update()}function openHash(){let id;try{id=decodeURIComponent(location.hash.slice(1))}catch{return}if(!id)return;const target=document.getElementById(id);if(!(target instanceof HTMLDetailsElement)||!target.classList.contains("node-detail"))return;target.open=true;const parent=target.closest(".topic-row");if(parent instanceof HTMLDetailsElement)parent.open=true;requestAnimationFrame(()=>target.scrollIntoView({block:"start"}))}window.addEventListener("hashchange",openHash);openHash()}
+const page=(title,path,body,home)=>`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${esc(title)}</title><meta name="description" content="A personal AI and machine learning knowledge map."><meta name="author" content="HEA233"><link rel="canonical" href="https://hea233.github.io${path}"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><meta property="og:title" content="${esc(title)}"><meta property="og:url" content="https://hea233.github.io${path}"><meta property="og:type" content="website"><link rel="stylesheet" href="${esc(css)}"><link rel="stylesheet" href="${home?'/knowledge-home.css':'/knowledge.css'}">${style}</head><body class="${home?'knowledge-landing':'knowledge-site'}"><a class="skip" href="#main">Skip to content</a><div class="shell"><header class="site-header knowledge-header"><a class="brand" href="/" aria-label="HEA233 home"><strong>HEA233</strong><span class="brand-divider" aria-hidden="true">/</span><span>ML Engineering Notebook</span></a><nav aria-label="Main navigation"><a href="/"${home?' aria-current="page"':''}>Knowledge Map</a><a href="/about/">About</a></nav></header><main id="main">${body}</main><footer><span>© HEA233</span><a href="https://github.com/HEA233">GitHub</a></footer></div><script>(${client.toString()})();</script></body></html>`;
+const grouped=new Map();for(const m of modules){if(!grouped.has(m.group))grouped.set(m.group,[]);grouped.get(m.group).push(m)}
+const card=m=>{const i=artOrder.indexOf(m.slug);const art=i>=0?`<div class="module-art" style="--art-x:${i%2*100}%;--art-y:${Math.floor(i/2)*25}%" aria-hidden="true"></div>`:`<div class="module-art-fallback">${icon(m)}</div>`;return `<a class="module-card" href="${url(m)}">${art}<span class="module-code">${m.number==="X"?"Parallel track":esc(m.number)+" · "+esc(m.id)}</span><h2>${esc(m.title)}</h2><p class="module-topics">${m.topics.slice(0,5).map(t=>`<span>${esc(t.title)}</span>`).join('<span class="topic-separator" aria-hidden="true"> · </span>')}${m.topics.length>5?`<span class="topic-separator" aria-hidden="true"> · </span><span>+${m.topics.length-5} more</span>`:""}</p><span class="module-count">${m.topics.length} categories · ${count(m)} topics</span></a>`};
+const searchData=[...idx.values()].map(({m,t,n})=>({id:n.id,title:n.title,module:m.title,category:t.title,priority:n.priority,href:url(m)+"#"+n.id,search:[n.id,n.title,m.title,t.title,n.priority].join(" ").toLowerCase()}));
+const home=`<div class="knowledge-home"><header class="map-heading"><h1>Knowledge Map</h1></header><p class="map-intro">A learning roadmap from mathematical foundations to modern AI systems. 22 technical modules · 350 technical topics, plus 15 research, coding and interview practice topics. The index is a roadmap; published notes are linked separately as they are written.</p><section id="map-search" class="map-search" hidden><label for="map-query">Search all knowledge topics</label><input id="map-query" type="search" placeholder="e.g. BM25, GRPO, KV cache, RL06" autocomplete="off"><p id="map-search-status" class="map-search-status" aria-live="polite"></p><ul id="map-search-results" class="map-search-results" hidden></ul></section><script type="application/json" id="map-search-data">${JSON.stringify(searchData).replace(/</g,"\\u003c")}</script><div id="map-domains">${[...grouped.entries()].map(([g,mods],i)=>`<section class="map-section" aria-labelledby="map-group-${i}"><h2 id="map-group-${i}">${esc(g)} <span>${mods.length} ${mods[0].id==="RX"?"track":"modules"}</span></h2><div class="module-grid">${mods.map(card).join("\n")}</div></section>`).join("\n")}</div></div>`;
+const out=[{path:"public/index.html",content:page("ML Engineering Notebook · Knowledge Map","/",home,true)}];
+for(const m of modules){const rows=m.topics.map((t,j)=>{const nodes=t.subtopics.map(n=>{const deps=n.prerequisites.map(id=>{const d=idx.get(id);return `<a href="${url(d.m)}#${id}">${esc(id)} · ${esc(d.n.title)}</a>`}).join("; ");const refs=n.references.map(r=>{const s=sources[r.id];return `<li><a href="${esc(s.url)}">${esc(s.title)}</a>${r.locator?` — ${esc(r.locator)}`:""}<span class="source-verification">${s.checked?"Landing page checked when catalogued":"Catalogue reference · verify before study"}</span></li>`}).join("");return `<li class="knowledge-node"><details class="node-detail" id="${esc(n.id)}"><summary><span class="node-id">${esc(n.id)}</span><span class="node-name">${esc(n.title)}</span><span class="node-priority">${esc(n.priority)}</span></summary><div class="node-body"><p class="node-status">Learning roadmap · article not implied by this entry</p><h3>Prerequisites</h3><p>${deps||"No listed prerequisite."}</p><h3>Reading</h3><ul>${refs}</ul><h3>Independent mastery check</h3><p>${esc(n.acceptance)}</p></div></details></li>`}).join("\n");const a=t.articles||[],links=a.map(x=>`<li class="published-note"><a href="${esc(x)}"><span class="note-icon" aria-hidden="true">↗</span><span><span class="note-title" lang="zh-CN">${esc(x==="/blog/reranker/"?"Reranker：从候选召回到排序损失":x)}</span></span><span class="note-arrow" aria-hidden="true">→</span></a></li>`).join("");return `<details class="topic-row"${a.length?" open":""}><summary><span class="topic-number">${String(j+1).padStart(2,"0")}</span><span class="topic-name">${esc(t.title)}<span class="topic-category-count">${t.subtopics.length} topics</span></span><span class="topic-arrow">${caret}</span></summary><ul class="topic-list">${nodes}${links}</ul></details>`}).join("\n");
+const body=`<div class="module-page"><nav class="module-breadcrumb" aria-label="Breadcrumb"><a href="/"><span aria-hidden="true">←</span> All modules</a><span class="crumb-divider" aria-hidden="true">/</span><span>${m.number==="X"?"Parallel track":esc(m.number)+" · "+esc(m.id)}</span></nav><header class="module-heading"><div><h1>${esc(m.title)}</h1><p class="module-meta">${m.topics.length} categories · ${count(m)} topics<br>Expand a topic for prerequisites, reading and independent mastery criteria. P0 = core, P1 = specialist, P2 = extension.</p></div><div class="heading-mark">${icon(m)}</div></header><section class="topic-section" aria-label="Knowledge index"><div class="topic-index">${rows}</div></section></div>`;
+out.push({path:`public/knowledge/${m.slug}/index.html`,content:page(`${m.title} · ML Engineering Notebook`,url(m),body,false)})}
+if(sitemap&&sitemap.includes("</urlset>")){const missing=modules.map(m=>`https://hea233.github.io${url(m)}`).filter(u=>!sitemap.includes(`<loc>${u}</loc>`));out.push({path:"public/sitemap-0.xml",content:sitemap.replace("</urlset>",missing.map(u=>`<url><loc>${esc(u)}</loc></url>`).join("")+"</urlset>")})}
+return out;
 }
-const modules = JSON.parse(readFileSync('knowledge-map.json', 'utf8'));
-for (const {path, content} of renderMap(modules)) {
-  mkdirSync(dirname(path), {recursive:true});
-  writeFileSync(path, content);
-}
+const data=JSON.parse(readFileSync('knowledge-map.json','utf8'));
+const sample=readFileSync('public/blog/reranker/index.html','utf8');
+const css=[...sample.matchAll(/href="([^"]*\/_astro\/[^"]+\.css)"/g)].map(m=>m[1]).find(p=>p.startsWith('/')&&existsSync('public'+p));
+if(!css) throw new Error('Current built Astro stylesheet not found. Build the blog first.');
+const sitemap=existsSync('public/sitemap-0.xml')?readFileSync('public/sitemap-0.xml','utf8'):'';
+for(const {path,content} of renderSite(data,css,sitemap)){mkdirSync(dirname(path),{recursive:true});writeFileSync(path,content)}
