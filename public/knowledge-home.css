@@ -1,16 +1,23 @@
 /* Homepage only. Reuse the article site's original paper texture and palette. */
 .knowledge-landing .shell {
-  max-width: 1280px;
+  /* Shared width keeps the header and card grid on the same vertical guides. */
+  --knowledge-width: min(1240px, calc(55.555vw + 207.555px));
+  max-width: 1360px;
   padding-inline: 56px;
+}
+.knowledge-landing .site-header,
+.knowledge-landing footer {
+  width: 100%;
+  max-width: var(--knowledge-width);
+  margin-inline: auto;
 }
 .knowledge-landing .site-header {
   border: 0;
 }
 .knowledge-home {
   width: 100%;
-  /* Compared with the previous 467px column, reduce each desktop
-     side margin by one third, with a cap for extra-wide screens. */
-  max-width: min(900px, calc(33.333vw + 311.333px));
+  /* Reduce the previous desktop side margins by another third. */
+  max-width: var(--knowledge-width);
   margin: 0 auto;
   padding: 28px 0 64px;
 }
@@ -87,13 +94,15 @@
 .knowledge-landing .knowledge-home .module-card .module-count { font-size: 11.5px; padding-top: 7px; }
 .knowledge-landing .knowledge-home .map-search { margin-bottom: 18px; }
 @media (max-width: 1199px) {
-  .knowledge-landing .shell { padding-inline: 36px; }
-  .knowledge-home { max-width: 620px; }
+  .knowledge-landing .shell {
+    padding-inline: 36px;
+    --knowledge-width: calc(33.333vw + 413.333px);
+  }
   .module-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 @media (max-width: 760px) {
-  .knowledge-landing .shell { padding-inline: 28px; }
-  .knowledge-home { max-width: 467px; padding-top: 26px; }
+  .knowledge-landing .shell { padding-inline: 28px; --knowledge-width: 467px; }
+  .knowledge-home { padding-top: 26px; }
   .module-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 }
 @media (max-width: 440px) {
