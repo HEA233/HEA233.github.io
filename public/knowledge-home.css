@@ -8,15 +8,15 @@
 }
 .knowledge-home {
   width: 100%;
-  max-width: 700px;
+  max-width: 467px;
   margin: 0 auto;
-  padding: 40px 0 88px;
+  padding: 28px 0 64px;
 }
 .map-heading {
   margin: 0 0 40px;
 }
 .map-heading h1 {
-  font: 400 clamp(43px, 5vw, 60px)/1.12 var(--display);
+  font: 400 clamp(36px, 4vw, 42px)/1.12 var(--display);
   letter-spacing: -.048em;
   color: var(--ink);
   margin: 0;
@@ -24,17 +24,17 @@
 .module-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 34px 32px;
+  gap: 22px 20px;
   align-items: stretch;
 }
 .module-card {
   display: flex;
   flex-direction: column;
   min-width: 0;
-  min-height: 265px;
-  padding: 20px 22px 23px;
+  min-height: 180px;
+  padding: 14px 14px 16px;
   border: 1px solid rgba(255,253,247,.35);
-  border-radius: 19px;
+  border-radius: 14px;
   background: linear-gradient(145deg, rgba(255,253,248,.79) 0%, rgba(255,252,243,.56) 100%);
   transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
 }
@@ -47,9 +47,9 @@
 .module-art {
   display: block;
   flex: none;
-  width: min(100%, 150px);
+  width: min(100%, 100px);
   aspect-ratio: 180 / 104;
-  margin: 0 auto 14px;
+  margin: 0 auto 9px;
   background-image: url("/knowledge-artwork.webp");
   background-repeat: no-repeat;
   background-size: 200% 500%;
@@ -64,14 +64,14 @@
 }
 .module-card h2 {
   color: var(--ink);
-  font: 600 22px/1.19 var(--display);
+  font: 600 18px/1.25 var(--display);
   letter-spacing: -.025em;
-  margin: 0 0 10px;
+  margin: 0 0 7px;
   overflow-wrap: anywhere;
 }
 .module-topics {
   color: var(--ink-soft);
-  font: 400 14px/1.55 var(--display);
+  font: 400 13px/1.55 var(--display);
   margin: 0;
   overflow-wrap: anywhere;
 }
@@ -80,33 +80,44 @@
 }
 @media (max-width: 1050px) {
   .knowledge-landing .shell { padding-inline: 36px; }
-  .module-grid { gap: 28px 26px; }
-  .module-card { padding: 19px 20px 22px; min-height: 265px; }
-  .module-card h2 { font-size: 22px; }
-  .module-topics { font-size: 14px; }
+  .module-grid { gap: 22px 20px; }
+  .module-card { padding: 14px 14px 16px; min-height: 180px; }
+  .module-card h2 { font-size: 18px; }
+  .module-topics { font-size: 13px; }
 }
 @media (max-width: 790px) {
   .knowledge-landing .shell { padding-inline: 28px; }
-  .knowledge-home { padding-top: 36px; }
+  .knowledge-home { padding-top: 26px; }
   .map-heading { margin-bottom: 30px; }
-  .module-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
-  .module-card { min-height: 250px; }
+  .module-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  .module-card { min-height: 180px; }
 }
-@media (max-width: 530px) {
+@media (max-width: 440px) {
   .knowledge-landing .shell { padding-inline: 21px; }
-  .knowledge-home { padding: 31px 0 64px; }
-  .map-heading h1 { font-size: 43px; }
+  .knowledge-home { padding: 24px 0 56px; }
+  .map-heading h1 { font-size: 36px; }
   .map-heading { margin-bottom: 28px; }
-  .module-grid { grid-template-columns: 1fr; gap: 23px; }
-  .module-card { min-height: 0; padding: 20px 22px 23px; }
-  .module-card h2 { font-size: 23px; }
+  .module-grid { grid-template-columns: 1fr; gap: 16px; }
+  .module-card { min-height: 0; padding: 14px 16px 16px; }
+  .module-card h2 { font-size: 19px; }
 }
 @media (max-width: 365px) {
   .knowledge-landing .shell { padding-inline: 16px; }
-  .map-heading h1 { font-size: 38px; }
-  .module-card { padding-inline: 21px; }
+  .map-heading h1 { font-size: 34px; }
+  .module-card { padding-inline: 14px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .module-card { transition: none; }
   .module-card:hover, .module-card:focus-visible { transform: none; }
+}
+
+/* Keep the compact homepage rhythm consistent with the generated module styles. */
+.knowledge-landing .knowledge-home .map-section { margin-top: 27px; }
+.knowledge-landing .knowledge-home .map-section > h2 { font-size: 16px; margin-bottom: 13px; }
+.knowledge-landing .knowledge-home .module-card .module-art-fallback { height: 49px; margin-bottom: 9px; }
+.knowledge-landing .knowledge-home .module-art-fallback .module-mark { width: 39px; height: 39px; }
+.knowledge-landing .knowledge-home .module-card .module-count { padding-top: 9px; }
+.knowledge-landing .knowledge-home .map-search { margin-bottom: 20px; }
+@media (max-width: 440px) {
+  .knowledge-landing .knowledge-home .map-section { margin-top: 24px; }
 }
